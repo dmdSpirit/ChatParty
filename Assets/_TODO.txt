@@ -1,0 +1,17 @@
+::version 0.00000000000000000000000000001::
+
++ viewer left event
++ roaming borders
++ message text
+- behaviors: walk, ilde, jump, die
+- animations: walk, ilde, jump, die
+- random avatar sprite, saved in db
+- name sorting
+- message text design
+- message text sorting
+
+
+-----------------------------------
+Further todo:
+::version 0.00000000000000000000000000002::
+- Nicknames uppercase
