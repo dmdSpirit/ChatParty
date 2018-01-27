@@ -8,6 +8,7 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 	List<string> joinedViewersList;
 	List<string> viewersLeftList;
 	List<Tuple<string, string>> messageList;
+	int avatarSortOrder;
 
 	public GameObject avatarPrefab;
 
@@ -20,13 +21,13 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 		viewersLeftList = new List<string> ();
 		messageList = new List<Tuple<string, string>> ();
 
-		//TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
-		//TwitchChat.Instance.onViewerLeft += RemoveViewer;
-		//TwitchChat.Instance.onNewMessage += AddMessage;
+		TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
+		TwitchChat.Instance.onViewerLeft += RemoveViewer;
+		TwitchChat.Instance.onNewMessage += AddMessage;
 
 
 		// FIXME: For testing only.
-		AddTestUsers();
+		//AddTestUsers();
 	}
 
 	void Update(){
@@ -34,7 +35,7 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 	}
 
 	public void AddJoinedViewer(string viewerName){
-		Debug.Log ("User joined: " + viewerName);
+		//Debug.Log ("User joined: " + viewerName);
 		joinedViewersList.Add (viewerName);
 
 	}
@@ -52,13 +53,17 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 		GameObject avatar;
 
 		for(int i = joinedViewersList.Count-1; i>=0;i--){
-			viewer = ViewerBaseController.Instance.GetViewer (joinedViewersList [i]);
-			avatar = Instantiate (avatarPrefab);
-			avatar.name = viewer.Name;
-			AvatarController avatarController = avatar.GetComponent<AvatarController> ();
-			avatarController.SetName (viewer.Name);
-			avatarController.viewer = viewer;
-			viewersDictionary.Add (viewer.Name, avatarController);
+			if (viewersDictionary.ContainsKey (joinedViewersList [i]) == false) {
+				viewer = ViewerBaseController.Instance.GetViewer (joinedViewersList [i]);
+				avatar = Instantiate (avatarPrefab);
+				avatar.name = viewer.Name;
+				AvatarController avatarController = avatar.GetComponent<AvatarController> ();
+				avatarController.SetName (viewer.Name);
+				avatarController.viewer = viewer;
+				// FIXME: Move to avatar controller.
+				avatarController.sprite.GetComponent<SpriteRenderer> ().sortingOrder = avatarSortOrder++;
+				viewersDictionary.Add (viewer.Name, avatarController);
+			}
 			joinedViewersList.Remove (joinedViewersList [i]);
 		}
 
@@ -66,25 +71,21 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 			if (viewersDictionary.ContainsKey (viewersLeftList[i])) {
 				Destroy (viewersDictionary [viewersLeftList[i]]);
 				viewersDictionary.Remove (viewersLeftList[i]);
-			} else {
-				Debug.LogError ("AvatarListController :: trying to remove user "
-					+ viewersLeftList[i] + " that does not exist.");
-				foreach (var v in viewersDictionary)
-					Debug.Log (v.ToString ());
+				viewersLeftList.Remove (viewersLeftList [i]);
 			}
-			viewersLeftList.Remove (viewersLeftList [i]);
+
 		}
 
 		for(int i = messageList.Count - 1; i>= 0; i--){
-			Debug.Log ("AvatarListController :: "+ messageList [i].Item1 + " says: " + messageList [i].Item2);
+			//Debug.Log ("AvatarListController :: "+ messageList [i].Item1 + " says: " + messageList [i].Item2);
 			if(viewersDictionary.ContainsKey(messageList[i].Item1)){
 				ChatMessage cm = viewersDictionary [messageList [i].Item1].chatMessage;
 				if (cm != null)
 					cm.AddMessage (messageList [i].Item2);
 				else
 					Debug.LogError ("ChatMessage is null");
+				messageList.Remove (messageList [i]);
 			}
-			messageList.Remove (messageList [i]);
 		}
 	}
 

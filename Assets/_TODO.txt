@@ -3,15 +3,37 @@
 + viewer left event
 + roaming borders
 + message text
++ animations: walk, ilde, jump, die
++ set order in layer for avatar sprites
 - behaviors: walk, ilde, jump, die
-- animations: walk, ilde, jump, die
+- 5 more avatars
 - random avatar sprite, saved in db
+- name text design
 - name sorting
 - message text design
 - message text sorting
+- black list
+- different DB path for release build
+- continue running with minimized window
+
+// FIXME: Users that left the channel are not deleted
+
+-----------------------------------
+::version 0.00000000000000000000000000002::
+- Nicknames uppercase
+- Deal with userJoined event lag
+- Devide long messages
+- Follower status
 
 
 -----------------------------------
 Further todo:
-::version 0.00000000000000000000000000002::
-- Nicknames uppercase
+- Twitch emotes
+- Show number of messages left in queue
+- Resize depending on viewers count
+- Spawning mobs
+- Fighting
+- Chat commands (!die ??)
+- LVLs
+- Boss
+- Turn inactive viewers into zombies. Let the zombopacalypse begin.

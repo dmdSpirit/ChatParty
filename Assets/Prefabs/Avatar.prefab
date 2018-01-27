@@ -46,6 +46,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &1461519594367108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4002470988192040}
+  - component: {fileID: 212513739379760950}
+  - component: {fileID: 95232371858185796}
+  m_Layer: 0
+  m_Name: Knight1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1632166458790976
 GameObject:
   m_ObjectHideFlags: 0
@@ -98,22 +115,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1890173244084556
-GameObject:
-  m_ObjectHideFlags: 0
+--- !u!4 &4002470988192040
+Transform:
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 4731131525523690}
-  - component: {fileID: 212843967897010246}
-  m_Layer: 0
-  m_Name: Sprite
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_GameObject: {fileID: 1461519594367108}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4360637162523992}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4360637162523992
 Transform:
   m_ObjectHideFlags: 1
@@ -125,23 +139,27 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 224383640082399640}
-  - {fileID: 4731131525523690}
+  - {fileID: 4002470988192040}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!4 &4731131525523690
-Transform:
+--- !u!95 &95232371858185796
+Animator:
+  serializedVersion: 3
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1890173244084556}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4360637162523992}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_GameObject: {fileID: 1461519594367108}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 14ea9dcb2dba8d343a934f584b24403a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
 --- !u!114 &114096625773865798
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -206,7 +224,7 @@ MonoBehaviour:
   maxDistance: 10
   currentSpeed: 0
   speed: {x: 0.6, y: 1.3}
-  spriteTransform: {fileID: 4731131525523690}
+  spriteTransform: {fileID: 4002470988192040}
 --- !u!114 &114310828203507748
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -313,13 +331,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   nameText: {fileID: 114252131301608270}
+  sprite: {fileID: 1461519594367108}
+  avatarStats: {fileID: 11400000, guid: 702c2cce76d816e429bd146b59a0e6e6, type: 2}
+  spriteTransform: {fileID: 4002470988192040}
+  currentSpeed: 0
+  currentDistance: 0
   chatMessage: {fileID: 0}
---- !u!212 &212843967897010246
+--- !u!212 &212513739379760950
 SpriteRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1890173244084556}
+  m_GameObject: {fileID: 1461519594367108}
   m_Enabled: 1
   m_CastShadows: 0
   m_ReceiveShadows: 0
@@ -348,12 +371,12 @@ SpriteRenderer:
   m_SortingLayerID: -977337091
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: dc0e2cf27a91408408ec9ec7a4e767bf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 2921d1ca7eb0333498d1566d3e5201e5, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 1.4241245, y: 1}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1

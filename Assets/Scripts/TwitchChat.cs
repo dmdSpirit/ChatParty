@@ -14,6 +14,8 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
 	public event Action<string> onViewerLeft;
 	public event Action<string, string> onNewMessage;
 
+	bool isConnected = false;
+
 	void Awake(){
 		credentials = new ConnectionCredentials (Credentials.userName, Credentials.accessToken);
 	}
@@ -28,14 +30,24 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
 
 		// FIXME: For testing only.
 		client.Connect ();
-		Debug.Log("Twitch client connected.");
+		if(client.IsConnected)
+			Debug.Log("Twitch client connected.");
 
 	}
 
+	void Update(){
+		if(isConnected == false && client.IsConnected){
+			Debug.Log("Twitch client connected.");
+			isConnected = true;
+		}
+			
+	}
+
 	void OnApplicationQuit(){
-		if(client.IsConnected)
+		if (client.IsConnected) {
 			client.Disconnect ();
-		Debug.Log("Twitch client disconnected.");
+			Debug.Log ("Twitch client disconnected.");
+		}
 	}
 
 	void OnUserLeft (object sender, OnUserLeftArgs e)
@@ -52,6 +64,7 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
 	}
 
 	void OnUserJoined (object sender, OnUserJoinedArgs e) {
+		Debug.Log ("User joined: " + e.Username);
 		if (onViewerJoined != null)
 			onViewerJoined (e.Username);
 	}

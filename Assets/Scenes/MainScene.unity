@@ -238,7 +238,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 3.44
+  orthographic size: 1.1197238
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -488,6 +488,48 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
+--- !u!1001 &1200473824
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: -1.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4360637162523992, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+      propertyPath: m_RootOrder
+      value: 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: 2886ccd81592afb4ba53e1663e1121a5, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1314688707
 GameObject:
   m_ObjectHideFlags: 0
@@ -561,6 +603,7 @@ GameObject:
   - component: {fileID: 1610729090}
   - component: {fileID: 1610729092}
   - component: {fileID: 1610729093}
+  - component: {fileID: 1610729094}
   m_Layer: 0
   m_Name: System
   m_TagString: Untagged
@@ -618,6 +661,17 @@ MonoBehaviour:
   avatarPrefab: {fileID: 1153230287917238, guid: 2886ccd81592afb4ba53e1663e1121a5,
     type: 2}
   name: 
+--- !u!114 &1610729094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1610729089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dadd54032413d854fae62215b196d597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2058327503
 GameObject:
   m_ObjectHideFlags: 0
