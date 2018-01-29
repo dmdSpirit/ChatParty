@@ -13,6 +13,7 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 	public GameObject avatarPrefab;
 
 	public string name;
+	public int maxTestViewers =5;
 	
 	void Start(){
 		CheckIsSingleInScene ();
@@ -21,13 +22,19 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 		viewersLeftList = new List<string> ();
 		messageList = new List<Tuple<string, string>> ();
 
+#if UNITY_STANDALONE_WIN
 		TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
 		TwitchChat.Instance.onViewerLeft += RemoveViewer;
 		TwitchChat.Instance.onNewMessage += AddMessage;
-
-
+#endif
+#if UNITY_EDITOR
 		// FIXME: For testing only.
-		//AddTestUsers();
+		AddTestUsers();
+
+		//TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
+		//TwitchChat.Instance.onViewerLeft += RemoveViewer;
+		//TwitchChat.Instance.onNewMessage += AddMessage;
+#endif
 	}
 
 	void Update(){
@@ -36,7 +43,8 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 
 	public void AddJoinedViewer(string viewerName){
 		//Debug.Log ("User joined: " + viewerName);
-		joinedViewersList.Add (viewerName);
+		if(viewerName != "seniorpomidor")
+			joinedViewersList.Add (viewerName);
 
 	}
 
@@ -67,15 +75,6 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 			joinedViewersList.Remove (joinedViewersList [i]);
 		}
 
-		for(int i = viewersLeftList.Count -1; i>=0; i--){
-			if (viewersDictionary.ContainsKey (viewersLeftList[i])) {
-				Destroy (viewersDictionary [viewersLeftList[i]]);
-				viewersDictionary.Remove (viewersLeftList[i]);
-				viewersLeftList.Remove (viewersLeftList [i]);
-			}
-
-		}
-
 		for(int i = messageList.Count - 1; i>= 0; i--){
 			//Debug.Log ("AvatarListController :: "+ messageList [i].Item1 + " says: " + messageList [i].Item2);
 			if(viewersDictionary.ContainsKey(messageList[i].Item1)){
@@ -83,9 +82,18 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 				if (cm != null)
 					cm.AddMessage (messageList [i].Item2);
 				else
-					Debug.LogError ("ChatMessage is null");
+					Logger.Instance.LogMessage ("AvatarListController :: Error! ChatMessage is null");
 				messageList.Remove (messageList [i]);
 			}
+		}
+
+		for(int i = viewersLeftList.Count -1; i>=0; i--){
+			if (viewersDictionary.ContainsKey (viewersLeftList[i])) {
+				Destroy (viewersDictionary [viewersLeftList[i]].gameObject);
+				viewersDictionary.Remove (viewersLeftList[i]);
+				viewersLeftList.Remove (viewersLeftList [i]);
+			}
+
 		}
 	}
 
@@ -98,6 +106,9 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 			avatarController.SetName (viewer.Name);
 			avatarController.viewer = viewer;
 			viewersDictionary.Add (viewer.Name, avatarController);
+			avatarController.sprite.GetComponent<SpriteRenderer> ().sortingOrder = avatarSortOrder++;
+			if (viewersDictionary.Count >= maxTestViewers)
+				break;
 		}
 	}
 

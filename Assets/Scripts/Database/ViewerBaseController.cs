@@ -5,17 +5,17 @@ using SQLite4Unity3d;
 
 public class ViewerBaseController : MonoSingleton<ViewerBaseController> {
 	SQLiteConnection connection;
-	public string viewerName;
 
 	void Awake () {
 		CheckIsSingleInScene ();
-		Debug.Log("Creating db connection.");
-		var dbPath = "Assets/StreamingAssets/TwitchChatDB.db";
+		string dbPath = Application.streamingAssetsPath + "/TwitchChatDB.db";
+		Logger.Instance.LogMessage("Creating db connection with path: "+dbPath);
 		connection = new SQLiteConnection (dbPath, SQLiteOpenFlags.ReadWrite);
 
 	}
 
 	void OnApplicationQuit(){
+		Logger.Instance.LogMessage("Closing db connection.");
 		connection.Close ();
 	}
 

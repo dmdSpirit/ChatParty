@@ -11,5 +11,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2bd8f4283fc86524a9be525454ee28f3, type: 3}
   m_Name: Knight1Stats
   m_EditorClassIdentifier: 
-  speed: {x: 0.6, y: 1.3}
-  travelDistance: {x: 1, y: 10}
+  walkSpeed: {x: 0.3, y: 1}
+  runSpeed: {x: 0.9, y: 2}
+  walkTravelDistance: {x: 1, y: 6}
+  runTravelDistance: {x: 3, y: 8}
+  idleTime: {x: 3, y: 10}

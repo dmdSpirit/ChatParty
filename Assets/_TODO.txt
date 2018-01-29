@@ -5,26 +5,27 @@
 + message text
 + animations: walk, ilde, jump, die
 + set order in layer for avatar sprites
-- behaviors: walk, ilde, jump, die
-- 5 more avatars
-- random avatar sprite, saved in db
-- name text design
-- name sorting
++ different DB path for release build
++ behaviors: walk, ilde, jump
++ name text design
 - message text design
+- 2 more avatars
+- name sorting
 - message text sorting
-- black list
-- different DB path for release build
-- continue running with minimized window
 
 // FIXME: Users that left the channel are not deleted
 
 -----------------------------------
 ::version 0.00000000000000000000000000002::
+- Create death animation
+- play death animation on userLeft event
 - Nicknames uppercase
 - Deal with userJoined event lag
 - Devide long messages
 - Follower status
-
+- random avatar sprite, saved in db
+- black list
+- more behaviours: die
 
 -----------------------------------
 Further todo:
@@ -37,3 +38,5 @@ Further todo:
 - LVLs
 - Boss
 - Turn inactive viewers into zombies. Let the zombopacalypse begin.
+- continue running with minimized window
+- spawn animation
