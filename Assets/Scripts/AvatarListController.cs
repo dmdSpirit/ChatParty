@@ -12,7 +12,7 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 
 	public GameObject avatarPrefab;
 
-	public string name;
+	public new string name;
 	public int maxTestViewers =5;
 	
 	void Start(){
@@ -23,9 +23,9 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 		messageList = new List<Tuple<string, string>> ();
 
 #if UNITY_STANDALONE_WIN
-		TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
-		TwitchChat.Instance.onViewerLeft += RemoveViewer;
-		TwitchChat.Instance.onNewMessage += AddMessage;
+		//TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
+		//TwitchChat.Instance.onViewerLeft += RemoveViewer;
+		//TwitchChat.Instance.onNewMessage += AddMessage;
 #endif
 #if UNITY_EDITOR
 		// FIXME: For testing only.
@@ -66,10 +66,7 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 				avatar = Instantiate (avatarPrefab);
 				avatar.name = viewer.Name;
 				AvatarController avatarController = avatar.GetComponent<AvatarController> ();
-				avatarController.SetName (viewer.Name);
-				avatarController.viewer = viewer;
-				// FIXME: Move to avatar controller.
-				avatarController.sprite.GetComponent<SpriteRenderer> ().sortingOrder = avatarSortOrder++;
+				avatarController.InitAvatar (viewer, avatarSortOrder++);
 				viewersDictionary.Add (viewer.Name, avatarController);
 			}
 			joinedViewersList.Remove (joinedViewersList [i]);
@@ -78,7 +75,7 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 		for(int i = messageList.Count - 1; i>= 0; i--){
 			//Debug.Log ("AvatarListController :: "+ messageList [i].Item1 + " says: " + messageList [i].Item2);
 			if(viewersDictionary.ContainsKey(messageList[i].Item1)){
-				ChatMessage cm = viewersDictionary [messageList [i].Item1].chatMessage;
+				MessageQueue cm = viewersDictionary [messageList [i].Item1].chatMessage;
 				if (cm != null)
 					cm.AddMessage (messageList [i].Item2);
 				else
@@ -100,13 +97,12 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
 	public void AddTestUsers(){
 		GameObject avatar;
 		foreach(var viewer in ViewerBaseController.Instance.GetAllViewers()){
+			ViewerBaseController.Instance.GetViewer (viewer.Name);
 			avatar = Instantiate (avatarPrefab);
 			avatar.name = viewer.Name;
 			AvatarController avatarController = avatar.GetComponent<AvatarController> ();
-			avatarController.SetName (viewer.Name);
-			avatarController.viewer = viewer;
+			avatarController.InitAvatar (viewer, avatarSortOrder++);
 			viewersDictionary.Add (viewer.Name, avatarController);
-			avatarController.sprite.GetComponent<SpriteRenderer> ().sortingOrder = avatarSortOrder++;
 			if (viewersDictionary.Count >= maxTestViewers)
 				break;
 		}

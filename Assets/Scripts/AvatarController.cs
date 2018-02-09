@@ -1,92 +1,74 @@
 ﻿using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(ChatMessage))]
+[RequireComponent(typeof(MessageQueue))]
+[RequireComponent(typeof(AvatarStats))]
 public class AvatarController : MonoBehaviour {
 	public Text nameText;
 	public Viewer viewer;
 	public GameObject sprite;
-	public AvatarStatsClass avatarStats;
-	public Transform spriteTransform;
-	public BehaviourClass[] behaviours;
+	public AvatarStats avatarStats;
 
-	public float currentSpeed;
-	public float currentDistance;
+	[HideInInspector]
+	public MessageQueue chatMessage;
+
+	Animator spriteAnimator;
+	BrainController brainController;
+
+
 
 	int direction = 1;
 	public int Direction{
 		get{ return direction;}
 		set{ 
 			if (direction != value) {
-				spriteTransform.localScale = new Vector2 (value, 1);
+				sprite.transform.localScale = new Vector2 (value, 1);
 				direction = value;
 			}
 		}
 	}
 
-	[HideInInspector]
-	public ChatMessage chatMessage;
-
-	int totalBehaviourWeight;
-	public BehaviourClass currentBehaviour;
-	Animator spriteAnimator;
-
-	void Start(){
-		chatMessage = GetComponent<ChatMessage> ();
-		if (sprite != null) {
-			spriteAnimator = sprite.GetComponent<Animator> ();
-			if(spriteAnimator == null)
-				Debug.LogError("AvatarController :: Could not get sprite animator.");
-		}
-
-		InitBehaviour ();
-	}
-
-	void Update(){
-		if (currentBehaviour != null)
-			currentBehaviour.Act (this);
+	void Awake(){
+		//Debug.Log (gameObject.name +  " :: AvatarController :: Start");
+		chatMessage = GetComponent<MessageQueue> ();
+		brainController = GetComponent<BrainController> ();
+		avatarStats = GetComponent<AvatarStats> ();
 	}
 
 	public void SetName (string name){
 		nameText.text = name;
 	}
 
-	public void InitBehaviour(){
-		if (behaviours.Length == 0)
-			Debug.LogWarning ("AvatarController :: No behaviours assigned to " + gameObject.name);
-		foreach (var behaviour in behaviours) {
-			behaviour.BehaviourEnded += ChangeBehaviour;
-			totalBehaviourWeight += behaviour.weight;
+	public void SetSprite(string spriteName){
+		//Debug.Log (gameObject.name +  " :: AvatarController :: SetSprite");
+		GameObject spritePrefab = Resources.Load ("SpritePrefabs/" + spriteName, 
+			                       typeof(GameObject)) as GameObject;
+		if (spritePrefab != null) {
+			sprite = Instantiate (spritePrefab);
+			sprite.transform.parent = transform;
 		}
-		ChangeBehaviour (this);
+		if (sprite != null) {
+			spriteAnimator = sprite.GetComponent<Animator> ();
+			if(spriteAnimator == null)
+				Debug.LogError("AvatarController :: Could not get sprite animator.");
+		}
+		//Debug.Log ("AvatarController :: SetSprite  -- " + spriteName);
+		avatarStats.stats = Resources.Load("AvatarStats/"+spriteName, typeof(AvatarStatsClass)) as AvatarStatsClass;
+		//Debug.Log ("AvatarController :: SetSprite  -- " + avatarStats.stats == null);
+		brainController.InitIdleBrain ();
 	}
 
-	public void ChangeBehaviour(AvatarController avatarController){
-		if (avatarController != this)
-			return;
-		currentBehaviour = GetRandomBehaviour ();
-		currentBehaviour.Init (this);
-		if(spriteAnimator!=null)
-			spriteAnimator.SetTrigger (currentBehaviour.animationTrigger);
+	public void ChangeAnimation(string trigger){
+		if (spriteAnimator != null) {
+			spriteAnimator.SetTrigger (trigger);
+		}
 	}
 
-	public BehaviourClass GetRandomBehaviour(){
-		if (behaviours.Length != 0) {
-			float t = Random.Range (0, totalBehaviourWeight);
-			int newBehaviour=0;
-			int currentWeight=0;
-			for (int i = 0; i < behaviours.Length; i++) {
-				if (t < currentWeight + behaviours [i].weight) {
-					newBehaviour = i;
-					break;
-				}
-				currentWeight += behaviours [i].weight;
-			}
-			//Debug.Log (gameObject.name + " behaviour changed to " + behaviours [newBehaviour].name);
-			return behaviours [newBehaviour];
-		}
-		else{
-			return null;
-		}
+	public void InitAvatar(Viewer viewer, int sortOrder){
+		this.viewer = viewer;
+		nameText.text = viewer.Name;
+		SetSprite (ViewerBaseController.Instance.GetSpriteName (viewer));
+		sprite.GetComponent<SpriteRenderer> ().sortingOrder = sortOrder++;
 	}
 }

@@ -13,18 +13,19 @@ public class Logger: MonoSingleton<Logger> {
 	public void Start(){
 #if UNITY_STANDALONE_WIN
 		if(String.IsNullOrEmpty(fileName)== false){
-			path = Application.streamingAssetsPath + "/" + fileName;
+			path = Application.dataPath + "/" + fileName;
 		}
 #endif
 	}
 	
 	public void LogMessage(string message){
+		#if UNITY_EDITOR
+		Debug.Log(message);
+		return;
+		#endif	
 #if UNITY_STANDALONE_WIN
 		if(String.IsNullOrEmpty(path)== false)
 			File.AppendAllText(path, string.Format("{0} :: {1} \n", DateTime.Now.ToString("MM/dd/yyyy HH:mm"), message));
-#endif
-#if UNITY_EDITOR
-		Debug.Log(message);
-#endif		
+#endif	
 	}
 }

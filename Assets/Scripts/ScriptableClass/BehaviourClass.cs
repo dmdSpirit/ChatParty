@@ -2,16 +2,14 @@
 using System;
 
 public abstract class BehaviourClass : ScriptableObject {
-	public event Action<AvatarController> BehaviourEnded; 
-
-	public int weight;
+	public event Action<BrainController> BehaviourEnded; 
 	public string animationTrigger;
 
-	public virtual void OnBehaviourEnded(AvatarController avatarController){
+	public virtual void OnBehaviourEnded(BrainController brainController){
 		if (BehaviourEnded != null)
-			BehaviourEnded (avatarController);
+			BehaviourEnded (brainController);
 	}
 
-	public abstract void Act (AvatarController avatarController);
-	public abstract void Init(AvatarController avatarController);
+	public abstract void Act (BrainController brainController);
+	public abstract void Init(BrainController brainController);
 }

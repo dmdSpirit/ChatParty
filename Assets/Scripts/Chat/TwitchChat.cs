@@ -60,11 +60,11 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
 	{
 		if (onNewMessage != null)
 			onNewMessage (e.ChatMessage.Username, e.ChatMessage.Message);
-		Logger.Instance.LogMessage (e.ChatMessage.DisplayName + " says: " + e.ChatMessage.Message);
+		//Logger.Instance.LogMessage (e.ChatMessage.DisplayName + " says: " + e.ChatMessage.Message);
 	}
 
 	void OnUserJoined (object sender, OnUserJoinedArgs e) {
-		Logger.Instance.LogMessage("User joined: " + e.Username);
+		//Logger.Instance.LogMessage("User joined: " + e.Username);
 		if (onViewerJoined != null)
 			onViewerJoined (e.Username);
 	}

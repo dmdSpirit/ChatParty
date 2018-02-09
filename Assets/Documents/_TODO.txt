@@ -1,0 +1,47 @@
+::version 1::
+
++ viewer left event
++ roaming borders
++ message text
++ animations: walk, ilde, jump, die
++ set order in layer for avatar sprites
++ different DB path for release build
++ behaviors: walk, ilde, jump
++ name text design
++ message text design
++ Devide long messages
++ random avatar sprite, saved in db
++ 2 more avatars
+
+-----------------------------------
+::version 2::
+- Fighting
+- Chat commands (!attack)
+- Dont show ! and /me messages
+- LVLs
+- Turn inactive viewers into zombies. Let the zombopacalypse begin.
+- Nicknames uppercase
+- Follower/Subscriber status
+- Twitch emotes
+- Viewer left/joined animation
+- Viewer followed/subscribed animation
+- Show number of messages left in queue (UI img on message box)
+- 5 more avatars
+
+
+-----------------------------------
+Further todo:
+- black list
+- more behaviours: die
+- Deal with userJoined event lag
+- play death animation on userLeft event ??
+- name sorting
+- message text sorting
+- Resize depending on viewers count
+- Spawning mobs
+- Boss
+- continue running with minimized window
+
+Viewer ideas:
+- kasarch: с боссом можно сделать так, что-бы рыцари подбегали, били, и сваливали. А от удара босса отлетали
+- tautometer: Maybe users can vote to decide to travel to another location to find new kind of mobs.

@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2bd8f4283fc86524a9be525454ee28f3, type: 3}
+  m_Name: Knight1
+  m_EditorClassIdentifier: 
+  walkSpeed: {x: 0.3, y: 1}
+  runSpeed: {x: 0.9, y: 2}
+  walkTravelDistance: {x: 1, y: 6}
+  runTravelDistance: {x: 3, y: 8}
+  idleTime: {x: 3, y: 10}
+  maxHP: 10
+  attackDistance: 0.8
+  attackCooldown: 1
+  damage: {x: 1, y: 2}
+  armor: 0
+  critChance: 0.5
+  critMultiplayer: 3
