@@ -56,6 +56,7 @@ public class AvatarController : MonoBehaviour {
 		//Debug.Log ("AvatarController :: SetSprite  -- " + spriteName);
 		avatarStats.stats = Resources.Load("AvatarStats/"+spriteName, typeof(AvatarStatsClass)) as AvatarStatsClass;
 		//Debug.Log ("AvatarController :: SetSprite  -- " + avatarStats.stats == null);
+		sprite.GetComponent<AnimationEventsHandler>().brainController = brainController;
 		brainController.InitIdleBrain ();
 	}
 

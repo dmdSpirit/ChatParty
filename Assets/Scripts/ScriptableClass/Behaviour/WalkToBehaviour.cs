@@ -4,7 +4,8 @@
 public class WalkToBehaviour : SimpleBehaviourClass {
 
 	public override void Init (BrainController brainController) {
-		brainController.currentSpeed = brainController.fightingController.movementSpeed;
+		// FIXME: Set movement from fightController.
+		brainController.currentSpeed = 1f;//brainController.fightingController.movementSpeed;
 		float newDistance = 
 			brainController.enemyBrainController.transform.position.x - brainController.transform.position.x;
 		brainController.Direction = newDistance >= 0 ? 1 : -1;

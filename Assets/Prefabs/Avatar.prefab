@@ -414,7 +414,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameText: {fileID: 114252131301608270}
   sprite: {fileID: 0}
-  avatarStats: {fileID: 11400000, guid: 702c2cce76d816e429bd146b59a0e6e6, type: 2}
+  avatarStats: {fileID: 0}
   chatMessage: {fileID: 0}
 --- !u!114 &114744669496430020
 MonoBehaviour:
@@ -430,10 +430,13 @@ MonoBehaviour:
   idleBrain: {fileID: 11400000, guid: 2d5414c1c0ea8734b9d08963bde12516, type: 2}
   currentSpeed: 0
   currentDistance: 0
-  fightingBrain: {fileID: 11400000, guid: 2935fc39bd35fc446b10db86c3b2a002, type: 2}
-  fightingController: {fileID: 0}
+  fightBrain: {fileID: 11400000, guid: 1da9a8921faae2e4a8b1f984094ac82f, type: 2}
   enemyBrainController: {fileID: 0}
   attackCooldown: 0
+  initiative: 0
+  turnTimer: 0
+  damage: 0
+  teamID: 0
   currentBehaviour: {fileID: 0}
 --- !u!114 &114877312431406870
 MonoBehaviour:

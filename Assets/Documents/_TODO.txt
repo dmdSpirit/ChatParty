@@ -26,6 +26,10 @@
 - Viewer left/joined animation
 - Viewer followed/subscribed animation
 - Show number of messages left in queue (UI img on message box)
+--
+- Resize depending on viewers count
+- Fight statistics
+
 - 5 more avatars
 
 
@@ -45,3 +49,6 @@ Further todo:
 Viewer ideas:
 - kasarch: с боссом можно сделать так, что-бы рыцари подбегали, били, и сваливали. А от удара босса отлетали
 - tautometer: Maybe users can vote to decide to travel to another location to find new kind of mobs.
+
+-------------------------------------
+- EventBus

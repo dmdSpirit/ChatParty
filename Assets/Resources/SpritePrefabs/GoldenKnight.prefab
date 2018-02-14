@@ -21,6 +21,7 @@ GameObject:
   - component: {fileID: 4697952374232342}
   - component: {fileID: 212906206419706588}
   - component: {fileID: 95723429607609392}
+  - component: {fileID: 114223298312372596}
   m_Layer: 0
   m_Name: GoldenKnight
   m_TagString: Untagged
@@ -58,6 +59,18 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114223298312372596
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1782005476876576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 840bd95b296baa04ca271652f46f22fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  brainController: {fileID: 0}
 --- !u!212 &212906206419706588
 SpriteRenderer:
   m_ObjectHideFlags: 1

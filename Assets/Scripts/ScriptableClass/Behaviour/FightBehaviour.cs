@@ -16,7 +16,7 @@ public class FightBehaviour : BehaviourClass {
 	public override void Act (BrainController brainController) {
 		brainController.attackCooldown -= Time.deltaTime;
 		if(brainController.attackCooldown <= 0){
-			brainController.HitEnemy (attackAnimationTrigger);
+			//brainController.HitEnemy (attackAnimationTrigger);
 			brainController.attackCooldown = brainController.GetAvatarStats ().attackCooldown;
 		}
 	}

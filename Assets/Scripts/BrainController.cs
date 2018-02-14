@@ -1,6 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
+public struct NextAttack{
+	public string attackName;
+	public float nextTurnTimer;
+}
 
 [RequireComponent(typeof(AvatarController))]
 [RequireComponent(typeof(AvatarStats))]
@@ -9,10 +15,18 @@ public class BrainController : MonoBehaviour {
 	public float currentSpeed;
 	public float currentDistance;
 
-	public FightingBrain fightingBrain;
-	public FightingController fightingController;
+	//public old_FightingBrain fightingBrain;
+	//public old_FightingController fightingController;
+	public FightBrain fightBrain;
 	public BrainController enemyBrainController;
 	public float attackCooldown;
+	NextAttack nextAttack;
+	public float initiative;
+	public float turnTimer;
+	public event Action<BrainController> OnTurnEnded;
+	public float damage;
+	public int teamID;
+	public bool turn = false;
 
 	Brain currentBrain;
 	public BehaviourClass currentBehaviour;
@@ -31,8 +45,12 @@ public class BrainController : MonoBehaviour {
 	}
 
 	void Update(){
-		if (currentBrain != null)
+		if (currentBrain.GetType() == typeof(IdleBrain) && currentBehaviour != null)
 			currentBrain.Act (this);
+		if(turn && currentBrain.GetType() == typeof(FightBrain)){
+			turn = false;
+			((FightBrain)currentBrain).StartTurn (this);
+		}
 	}
 
 	public AvatarStatsClass GetAvatarStats(){
@@ -45,13 +63,13 @@ public class BrainController : MonoBehaviour {
 		InitBehaviour ();
 	}
 
-	public void InitFightingBrain(FightingController fController, BrainController enemyBrainController){
+	/*public void InitFightingBrain(old_FightingController fController, BrainController enemyBrainController){
 		fightingController = fController;
 		currentBehaviour = fightingBrain.InitBrain (this);
 		currentBrain = fightingBrain;
 		this.enemyBrainController = enemyBrainController;
 		InitBehaviour ();
-	}
+	}*/
 		
 	public void ChangeBehaviour (BehaviourClass newBehaviour){
 		currentBehaviour = newBehaviour;
@@ -64,23 +82,22 @@ public class BrainController : MonoBehaviour {
 	}
 
 	public void ChangeAnimation(string animationTrigger){
+		Debug.Log (gameObject.name + " animation trigger set to " + animationTrigger);
 		avatarController.ChangeAnimation (animationTrigger);
 	}
 
-	public void HitEnemy(string hitAnimationTrigger){
+	/*public void HitEnemy(string hitAnimationTrigger){
 		Vector2 damageRange = GetAvatarStats ().damage;
-		bool stun = Random.value <= GetAvatarStats ().critChance;
+		bool stun = UnityEngine.Random.value <= GetAvatarStats ().critChance;
 		float critM = stun ? GetAvatarStats ().critMultiplayer : 1;
-		float damage = critM * Random.Range(damageRange.x, damageRange.y);
+		float damage = critM * UnityEngine.Random.Range(damageRange.x, damageRange.y);
 		enemyBrainController.TakeDamage ((int)damage, stun);
 		ChangeAnimation (hitAnimationTrigger);
-	}
+	}*/
 
-	public void TakeDamage(int damage, bool stun){
-		if (stun) {
-			ChangeAnimation (fightingBrain.fightBehaviour.hurtAnimationTrigger);
-			attackCooldown = GetAvatarStats ().attackCooldown;
-		}
+	public void TakeDamage(float damage){
+		ChangeAnimation (fightBrain.hurtTrigger);
+		attackCooldown = GetAvatarStats ().attackCooldown;
 		Debug.Log (gameObject.name + " lost " + damage + " HP.");
 
 	}
@@ -89,5 +106,34 @@ public class BrainController : MonoBehaviour {
 		currentBrain = idleBrain;
 
 		InitBehaviour ();
+	}
+
+	public float GetInitiative(){
+		initiative = UnityEngine.Random.value;
+		return initiative;
+	}
+
+	public void TakeTurn(){
+		turn = true;
+		//TurnEnded ();
+	}
+
+	public void TurnEnded(){
+		// TODO: turnTimer mast already be calculated.
+		if (OnTurnEnded != null)
+			OnTurnEnded (this);
+	}
+
+	public void InitFightingBrain(){
+		currentBrain = fightBrain;
+		//currentBehaviour = fightBrain.idleBehaviour;
+		currentBehaviour = null;
+		//InitBehaviour();
+		// FIXME: Get animation trigger from brain.
+		ChangeAnimation("Idle");
+	}
+
+	public void DealDamage(){
+		enemyBrainController.TakeDamage (damage);
 	}
 }
