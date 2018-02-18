@@ -2,110 +2,159 @@
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Component for handling list of all Avatars.
+/// </summary>
 public class AvatarListController : MonoSingleton<AvatarListController> {
+    [SerializeField]
+    bool addTestViewers = true;
+    [SerializeField]
+    DebugLogType logType = DebugLogType.Full;
+    [SerializeField]
+    GameObject avatarPrefab;
+    [SerializeField]
+    int maxTestViewers = 5;
 
-	Dictionary<string, AvatarController> viewersDictionary;
-	List<string> joinedViewersList;
-	List<string> viewersLeftList;
-	List<Tuple<string, string>> messageList;
-	int avatarSortOrder;
+    // We assume that we always get DisplayedName (with correct uppercase) from TwitchChat
+    Dictionary<string, AvatarController> viewerDictionary;
+    List<string> viewerLeftList;
+    List<Tuple<string, string>> commandList;
+    List<Tuple<string, string>> messageList;
+    // FIXME: Replace simple last joined-first drawn logic.
+    int avatarSortOrder;
 
-	public GameObject avatarPrefab;
+    private void Awake() {
+        viewerDictionary = new Dictionary<string, AvatarController>();
+        viewerLeftList = new List<string>();
+        commandList = new List<Tuple<string, string>>();
+        messageList = new List<Tuple<string, string>>();
+    }
 
-	public new string name;
-	public int maxTestViewers =5;
-	
-	void Start(){
-		CheckIsSingleInScene ();
-		viewersDictionary = new Dictionary<string, AvatarController> ();
-		joinedViewersList = new List<string> ();
-		viewersLeftList = new List<string> ();
-		messageList = new List<Tuple<string, string>> ();
-
-#if UNITY_STANDALONE_WIN
-		//TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
-		//TwitchChat.Instance.onViewerLeft += RemoveViewer;
-		//TwitchChat.Instance.onNewMessage += AddMessage;
-#endif
+    private void Start() {
 #if UNITY_EDITOR
-		// FIXME: For testing only.
-		AddTestUsers();
-
-		//TwitchChat.Instance.onViewerJoined += AddJoinedViewer;
-		//TwitchChat.Instance.onViewerLeft += RemoveViewer;
-		//TwitchChat.Instance.onNewMessage += AddMessage;
+        if (addTestViewers)
+            AddTestViewers();
 #endif
-	}
+#if !UNITY_EDITOR
+        logType = DebugLogType.Full;
+#endif
+        CheckIsSingleInScene();
+    }
 
-	void Update(){
-		UpdateViewers ();
-	}
+    private void Update() {
+        for (int i=viewerLeftList.Count-1; i >= 0; i--) { 
+            if (viewerDictionary.ContainsKey(viewerLeftList[i])) {
+                RemoveAvatar(viewerLeftList[i]);
+                viewerLeftList.Remove(viewerLeftList[i]);
+            }
+        }
+        for (int i=messageList.Count-1; i >= 0; i--) {
+            string viewerName = messageList[i].Item1;
+            string message = messageList[i].Item2;
+            if (viewerDictionary.ContainsKey(viewerName)) { 
+                viewerDictionary[viewerName].AddMessage(message);
+                messageList.Remove(messageList[i]);
+            }
+        }
+        for(int i=commandList.Count-1; i >= 0; i--) {
+            string viewerName = messageList[i].Item1;
+            string command = messageList[i].Item2;
+            if (viewerDictionary.ContainsKey(viewerName)) {
+                viewerDictionary[viewerName].AddCommand(command);
+                messageList.Remove(messageList[i]);
+            }
+        }
+    }
 
-	public void AddJoinedViewer(string viewerName){
-		//Debug.Log ("User joined: " + viewerName);
-		if(viewerName != "seniorpomidor")
-			joinedViewersList.Add (viewerName);
+    /// <summary>
+    /// Add new viewer.
+    /// </summary>
+    /// <param name="viewerName">Viewer Name.</param>
+    public void AddViewer(string viewerName) {
+        // TODO: Implement black list for viewer names.
+        if (viewerName == "SeniorPomidor")
+            return;
+        // There is a chance that we can get UserLeft event before UserJoined. 
+        // In this case we should not create new Avatar.
+        if (viewerLeftList.Contains(viewerName))
+            viewerLeftList.Remove(viewerName);
+        else
+            CreateAvatar(viewerName);
+    }
 
-	}
+    /// <summary>
+    /// Remove viewer from viewer list.
+    /// </summary>
+    /// <param name="viewerName">Viewer Name.</param>
+    public void RemoveViewer(string viewerName) {
+        // If we can't find leftViewer in viewerDictionary in means that we got
+        // UserLeft event before getting UserJoined, it will be handled by joinedViewerList
+        // later. Nothing to remove. There is also slight chance that user can change his name
+        // while having active avatar, but it is too small to bother.
+        if (viewerDictionary.ContainsKey(viewerName))
+            RemoveAvatar(viewerName);
+        else
+            viewerLeftList.Add(viewerName);
+    }
 
-	public void RemoveViewer(string name){
-		viewersLeftList.Add (name);
-	}
+    /// <summary>
+    /// Add message to be shown by Avatar.
+    /// </summary>
+    /// <param name="messagePair">Item1: Viewer Name, Item2: Message.</param>
+    public void AddMessage(Tuple<string, string> messagePair) {
+        string viewerName = messagePair.Item1;
+        string message = messagePair.Item2;
+        // We can still can have MessageEvent before UserJoined.
+        if (viewerDictionary.ContainsKey(viewerName))
+            viewerDictionary[viewerName].AddMessage(message);
+        else
+            messageList.Add(messagePair);
+    }
 
-	public void AddMessage (string name, string message){
-		messageList.Add (new Tuple<string, string> (name, message));
-	}
+    /// <summary>
+    /// Add command to be performed by Avatar.
+    /// </summary>
+    /// <param name="commandPair">Item1: Viewer Name, Item2: Command.</param>
+    public void AddCommand(Tuple<string, string> commandPair) {
+        string viewerName = commandPair.Item1;
+        string command = commandPair.Item2;
+        // We can still can have CommandEvent before UserJoined.
+        if (viewerDictionary.ContainsKey(viewerName))
+            viewerDictionary[viewerName].AddCommand(command);
+        else
+            commandList.Add(commandPair);
+    }
 
-	 void UpdateViewers(){
-		Viewer viewer;
-		GameObject avatar;
+    private void CreateAvatar(string viewerName) {
+        Viewer viewer = ViewerBaseController.Instance.GetViewer(viewerName);
+        GameObject avatarGO = Instantiate(avatarPrefab);
+        avatarGO.name = viewer.Name;
+        AvatarController avatarController = avatarGO.GetComponent<AvatarController>();
+        if (avatarController == null)
+            Logger.LogMessage("AvatarListController::CreateAvatar -- " +
+                "Avatar prefab does not have AvatarController script attached.", LogType.Error);
+        else {
+            avatarController.InitAvatar(viewer, avatarSortOrder++);
+            viewerDictionary.Add(viewerName, avatarController);
+            if (logType == DebugLogType.Full)
+                Logger.LogMessage(viewerName + " Avatar was created");
+        }
+    }
+    
+    private void RemoveAvatar(string viewerName) {
+        viewerDictionary[viewerName].DestroyAvatar();
+        viewerDictionary.Remove(viewerName);
+        if (logType == DebugLogType.Full)
+            Logger.LogMessage(viewerName + " Avatar was destroyed");
+    }
 
-		for(int i = joinedViewersList.Count-1; i>=0;i--){
-			if (viewersDictionary.ContainsKey (joinedViewersList [i]) == false) {
-				viewer = ViewerBaseController.Instance.GetViewer (joinedViewersList [i]);
-				avatar = Instantiate (avatarPrefab);
-				avatar.name = viewer.Name;
-				AvatarController avatarController = avatar.GetComponent<AvatarController> ();
-				avatarController.InitAvatar (viewer, avatarSortOrder++);
-				viewersDictionary.Add (viewer.Name, avatarController);
-			}
-			joinedViewersList.Remove (joinedViewersList [i]);
-		}
-
-		for(int i = messageList.Count - 1; i>= 0; i--){
-			//Debug.Log ("AvatarListController :: "+ messageList [i].Item1 + " says: " + messageList [i].Item2);
-			if(viewersDictionary.ContainsKey(messageList[i].Item1)){
-				MessageQueue cm = viewersDictionary [messageList [i].Item1].chatMessage;
-				if (cm != null)
-					cm.AddMessage (messageList [i].Item2);
-				else
-					Logger.Instance.LogMessage ("AvatarListController :: Error! ChatMessage is null");
-				messageList.Remove (messageList [i]);
-			}
-		}
-
-		for(int i = viewersLeftList.Count -1; i>=0; i--){
-			if (viewersDictionary.ContainsKey (viewersLeftList[i])) {
-				Destroy (viewersDictionary [viewersLeftList[i]].gameObject);
-				viewersDictionary.Remove (viewersLeftList[i]);
-				viewersLeftList.Remove (viewersLeftList [i]);
-			}
-
-		}
-	}
-
-	public void AddTestUsers(){
-		GameObject avatar;
-		foreach(var viewer in ViewerBaseController.Instance.GetAllViewers()){
-			ViewerBaseController.Instance.GetViewer (viewer.Name);
-			avatar = Instantiate (avatarPrefab);
-			avatar.name = viewer.Name;
-			AvatarController avatarController = avatar.GetComponent<AvatarController> ();
-			avatarController.InitAvatar (viewer, avatarSortOrder++);
-			viewersDictionary.Add (viewer.Name, avatarController);
-			if (viewersDictionary.Count >= maxTestViewers)
-				break;
-		}
-	}
-
+    private void AddTestViewers() {
+        if (logType == DebugLogType.Full)
+            Logger.LogMessage("Adding " + maxTestViewers + " test viewers.");
+        foreach (var viewer in ViewerBaseController.Instance.GetAllViewers()) {
+            CreateAvatar(viewer.Name);
+            if (viewerDictionary.Count >= maxTestViewers)
+                break;
+        }
+    }
 }

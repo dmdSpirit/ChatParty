@@ -603,7 +603,6 @@ GameObject:
   - component: {fileID: 1610729092}
   - component: {fileID: 1610729093}
   - component: {fileID: 1610729094}
-  - component: {fileID: 1610729095}
   - component: {fileID: 1610729096}
   m_Layer: 0
   m_Name: System
@@ -618,11 +617,14 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1610729089}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7ed7b9753415f8946af189072d44814a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  chatEnabled: 1
+  logType: 2
+  commandIdentifier: 33
 --- !u!4 &1610729091
 Transform:
   m_ObjectHideFlags: 0
@@ -647,8 +649,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 716973b81c8c10e4292b7440f8b22afd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxSpriteId: 2
-  goldenArmor: 3
+  goldenArmorId: 999
 --- !u!114 &1610729093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -660,9 +661,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e774a550313255247a32c74dd72838f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  addTestViewers: 1
+  logType: 2
   avatarPrefab: {fileID: 1153230287917238, guid: 2886ccd81592afb4ba53e1663e1121a5,
     type: 2}
-  name: 
   maxTestViewers: 4
 --- !u!114 &1610729094
 MonoBehaviour:
@@ -675,18 +677,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dadd54032413d854fae62215b196d597, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1610729095
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1610729089}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c92580284ad2e864e9bb24b0223d7481, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fileName: logs
 --- !u!114 &1610729096
 MonoBehaviour:
   m_ObjectHideFlags: 0

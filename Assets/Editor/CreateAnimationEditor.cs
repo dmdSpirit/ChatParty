@@ -1,25 +1,26 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
+/// <summary>
+/// Inspector extension for AnimationsCreator component.
+/// </summary>
 [CustomEditor(typeof(AnimationsCreator))]
 public class CreateAnimationEditor : Editor {
-	List<Editor> animationEditors;
 	string foldoutText = "Show animations parameters.";
 	bool showAnimationParams = false;
+	List<Editor> animationEditors;
 
 	void OnEnable (){
 		animationEditors = new List<Editor> ();
 	}
 
 	public override void OnInspectorGUI () {
-
 		DrawDefaultInspector ();
-		AnimationsCreator script = (AnimationsCreator)target;
-		if(script.animations.Length != animationEditors.Count){
+		AnimationsCreator animationsCreator = (AnimationsCreator)target;
+		if(animationsCreator.animations.Length != animationEditors.Count){
 			animationEditors.Clear ();
-			foreach (var animation in script.animations)
+			foreach (var animation in animationsCreator.animations)
 				animationEditors.Add (Editor.CreateEditor (animation));
 		}
 		showAnimationParams = EditorGUILayout.Foldout (showAnimationParams, foldoutText);
@@ -29,17 +30,14 @@ public class CreateAnimationEditor : Editor {
 				animationEditor.DrawDefaultInspector ();
 			}
 			foldoutText = "Hide animations parameters.";
-		} else{
+		} 
+		else
 			foldoutText = "Show animations parameters.";
-		}
-			
 
-		if(GUILayout.Button("Load Sprites")){
-			script.LoadSprites ();
-		}
-		if(GUILayout.Button("Create Sprite Prefab")){
-			script.CreateAnimationController ();
-		}
+		if(GUILayout.Button("Load Sprites"))
+			animationsCreator.LoadSprites ();
+		if(GUILayout.Button("Create Sprite Prefab"))
+			animationsCreator.CreateAnimationController ();
 	}
 }
 

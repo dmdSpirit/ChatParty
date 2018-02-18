@@ -1,17 +1,19 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class MessageFormatter : MonoBehaviour {
+/// <summary>
+/// Singleton system component for splitting long messages.
+/// </summary>
+public class MessageFormatter : MonoSingleton<MessageFormatter> {
 	public int maxCharInLine = 15;
 	public int maxLines = 3;
 
 	string formatedMessage;
 
-	public int GetMaxMessageLength(){
-		return maxCharInLine * maxLines;
-	}
-
+	/// <summary>
+	/// Splits message into lines of length maxCharInLine adding '\n'.
+	/// </summary>
+	/// <returns>Formated message.</returns>
+	/// <param name="message">Message.</param>
 	public string FormatMessage(string message){
 		if (maxCharInLine == 0) {
 			Debug.LogError("MessageFormatter :: maxCharInLine is 0.");

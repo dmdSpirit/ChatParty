@@ -1,31 +1,43 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.IO;
+﻿using UnityEngine;
 using System;
+using System.IO;
 
-using UnityEngine;
+public enum LogType {Message, Warning, Error};
 
-public class Logger: MonoSingleton<Logger> {
-	public string fileName;
-
+/// <summary>
+/// Component for displaying logs depending on platform (editor/windows).
+/// </summary>
+public static class Logger{
+#if !UNITY_EDITOR
 	string path;
 
-	public void Start(){
-#if UNITY_STANDALONE_WIN
-		if(String.IsNullOrEmpty(fileName)== false){
-			path = Application.dataPath + "/" + fileName;
+	static Logger(){
+		path = Application.dataPath + "/" + "Log";
+	}
+
+	public static void LogMessage(string message, LogType logType = LogType.Message){
+	if(String.IsNullOrEmpty(path)== false)
+			File.AppendAllText(path, string.Format("{0}:{1}  :: {2} \n", 
+				DateTime.Now.ToString("MM/dd/yyyy HH:mm"), logType.ToString(), message));
+	}
+#elif UNITY_EDITOR
+	/// <summary>
+	/// Dispays message, depending on platform: editor - default Debug.Log, windows - log file.
+	/// </summary>
+	/// <param name="message">Message.</param>
+	/// <param name = "logType">Type of message logged.</param>
+	public static void LogMessage(string message, LogType logType = LogType.Message){
+		switch (logType){
+		case LogType.Message:
+			Debug.Log (message);
+			break;
+		case LogType.Warning:
+			Debug.LogWarning (message);
+			break;
+		case LogType.Error:
+			Debug.LogError (message);
+			break;
 		}
+	}
 #endif
-	}
-	
-	public void LogMessage(string message){
-		#if UNITY_EDITOR
-		Debug.Log(message);
-		return;
-		#endif	
-#if UNITY_STANDALONE_WIN
-		if(String.IsNullOrEmpty(path)== false)
-			File.AppendAllText(path, string.Format("{0} :: {1} \n", DateTime.Now.ToString("MM/dd/yyyy HH:mm"), message));
-#endif	
-	}
 }

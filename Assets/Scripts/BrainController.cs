@@ -82,7 +82,7 @@ public class BrainController : MonoBehaviour {
 	}
 
 	public void ChangeAnimation(string animationTrigger){
-		Debug.Log (gameObject.name + " animation trigger set to " + animationTrigger);
+		//Debug.Log (gameObject.name + " animation trigger set to " + animationTrigger);
 		avatarController.ChangeAnimation (animationTrigger);
 	}
 

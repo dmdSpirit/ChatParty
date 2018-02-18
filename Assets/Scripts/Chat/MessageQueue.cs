@@ -4,30 +4,35 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[RequireComponent(typeof(MessageFormatter))]
+/// <summary>
+/// Component for displaying formated messages from chat.
+/// </summary>
 public class MessageQueue : MonoBehaviour {
 	public Text messageText;
 	public float messageLifeTime = 8;
+
 	float currentLifeTime = 0;
+	Queue<string> messageQueue = new Queue<string> ();
 
-	MessageFormatter messageFormatter;
-
-	Queue<string> messageQueue;
-
-	void Start(){
-		messageFormatter = GetComponent<MessageFormatter> ();
-		messageQueue = new Queue<string> ();
+	void Update(){
+		currentLifeTime -= Time.deltaTime;
+		if((messageQueue.Count>0 && messageText.text == "") || currentLifeTime <= 0 )
+			NextMessage ();
 	}
 
+	/// <summary>
+	/// Add message to queue.
+	/// </summary>
+	/// <param name="message">Message.</param>
 	public void AddMessage(string message){
-		string[] formatedMessages = messageFormatter.FormatMessage (message).Split('\n');
-		int messagesNum = formatedMessages.Length / messageFormatter.maxLines;
+		string[] formatedMessages = MessageFormatter.Instance.FormatMessage (message).Split('\n');
+		int messagesNum = formatedMessages.Length / MessageFormatter.Instance.maxLines;
 		string newMessage;
 		for(int i=0; i<messagesNum; i++){
 			newMessage = "";
-			for (int j = 0; j < messageFormatter.maxLines; j++) {
-				if(formatedMessages[i*messageFormatter.maxLines + j] != "")
-					newMessage+=formatedMessages[i*messageFormatter.maxLines + j]+"\n";
+			for (int j = 0; j < MessageFormatter.Instance.maxLines; j++) {
+				if(formatedMessages[i*MessageFormatter.Instance.maxLines + j] != "")
+					newMessage+=formatedMessages[i*MessageFormatter.Instance.maxLines + j]+"\n";
 			}
 			newMessage = newMessage.Trim ();
 			if (newMessage != "")
@@ -43,11 +48,5 @@ public class MessageQueue : MonoBehaviour {
 			messageText.text = "";
 		}
 		currentLifeTime = messageLifeTime;
-	}
-
-	void Update(){
-		currentLifeTime -= Time.deltaTime;
-		if(currentLifeTime <= 0)
-			NextMessage ();
 	}
 }

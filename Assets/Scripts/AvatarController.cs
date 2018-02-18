@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
+using System;
 
 [RequireComponent(typeof(MessageQueue))]
 [RequireComponent(typeof(AvatarStats))]
@@ -66,10 +67,28 @@ public class AvatarController : MonoBehaviour {
 		}
 	}
 
+    // FIXME: Try to move functionality to awake and start.
 	public void InitAvatar(Viewer viewer, int sortOrder){
 		this.viewer = viewer;
 		nameText.text = viewer.Name;
 		SetSprite (ViewerBaseController.Instance.GetSpriteName (viewer));
 		sprite.GetComponent<SpriteRenderer> ().sortingOrder = sortOrder++;
 	}
+
+    //---- new
+    /// <summary>
+    /// Destroys current Avatar.
+    /// </summary>
+    public void DestroyAvatar() {
+        Destroy(gameObject);
+    }
+
+    internal void AddMessage(string message) {
+        throw new NotImplementedException();
+    }
+
+    internal void AddCommand(string command) {
+        throw new NotImplementedException();
+    }
+
 }

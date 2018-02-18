@@ -59,7 +59,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4360637162523992}
   - component: {fileID: 114744560282912672}
-  - component: {fileID: 114877312431406870}
   - component: {fileID: 114613857275879830}
   - component: {fileID: 114744669496430020}
   - component: {fileID: 114187480578895948}
@@ -437,20 +436,8 @@ MonoBehaviour:
   turnTimer: 0
   damage: 0
   teamID: 0
+  turn: 0
   currentBehaviour: {fileID: 0}
---- !u!114 &114877312431406870
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1153230287917238}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6d9e11caba83f14bbdce52217fde71e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxCharInLine: 20
-  maxLines: 3
 --- !u!222 &222045799297201762
 CanvasRenderer:
   m_ObjectHideFlags: 1
