@@ -128,16 +128,16 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
     private void CreateAvatar(string viewerName) {
         Viewer viewer = ViewerBaseController.Instance.GetViewer(viewerName);
         GameObject avatarGO = Instantiate(avatarPrefab);
-        avatarGO.name = viewer.Name;
         AvatarController avatarController = avatarGO.GetComponent<AvatarController>();
         if (avatarController == null)
             Logger.LogMessage("AvatarListController::CreateAvatar -- " +
                 "Avatar prefab does not have AvatarController script attached.", LogType.Error);
         else {
-            avatarController.InitAvatar(viewer, avatarSortOrder++);
+            avatarController.viewer = viewer;
+            avatarController.spriteSortOrder = avatarSortOrder++;
             viewerDictionary.Add(viewerName, avatarController);
             if (logType == DebugLogType.Full)
-                Logger.LogMessage(viewerName + " Avatar was created");
+                Logger.LogMessage($"{viewerName} Avatar was created");
         }
     }
     
@@ -145,12 +145,12 @@ public class AvatarListController : MonoSingleton<AvatarListController> {
         viewerDictionary[viewerName].DestroyAvatar();
         viewerDictionary.Remove(viewerName);
         if (logType == DebugLogType.Full)
-            Logger.LogMessage(viewerName + " Avatar was destroyed");
+            Logger.LogMessage($"{viewerName} Avatar was destroyed");
     }
 
     private void AddTestViewers() {
         if (logType == DebugLogType.Full)
-            Logger.LogMessage("Adding " + maxTestViewers + " test viewers.");
+            Logger.LogMessage($"Adding {maxTestViewers} test viewers.");
         foreach (var viewer in ViewerBaseController.Instance.GetAllViewers()) {
             CreateAvatar(viewer.Name);
             if (viewerDictionary.Count >= maxTestViewers)

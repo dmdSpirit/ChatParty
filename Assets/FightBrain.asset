@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 537bd6ec267cdf74aa4f60c7cdd546f1, type: 3}
+  m_Name: FightBrain
+  m_EditorClassIdentifier: 
+  actionList:
+  - {fileID: 11400000, guid: 9b34c15f1a169854f8eee9fc6271f6b1, type: 2}
+  - {fileID: 11400000, guid: 13801556e7462b947ba18733267f8bc3, type: 2}
+  ildeAnimationTrigger: Idle
+  runAction: {fileID: 11400000, guid: cce55792c6329fb4c8e48b4c4237dbb5, type: 2}

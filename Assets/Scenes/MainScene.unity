@@ -622,7 +622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed7b9753415f8946af189072d44814a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatEnabled: 1
+  chatEnabled: 0
   logType: 2
   commandIdentifier: 33
 --- !u!4 &1610729091
@@ -689,7 +689,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxCharInLine: 15
-  maxLines: 0
+  maxLines: 3
 --- !u!1 &2058327503
 GameObject:
   m_ObjectHideFlags: 0

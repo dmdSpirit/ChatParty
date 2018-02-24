@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
-[CreateAssetMenu (menuName = "ScriptableObject/Brains/FightBrain")]
+//[CreateAssetMenu (menuName = "ScriptableObject/Brains/FightBrain")]
 public class FightBrain : Brain {
 	//public event Action<FightBrain, NextAttack> OnTurnEnded;
 

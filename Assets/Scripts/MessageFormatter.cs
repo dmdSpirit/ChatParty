@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
 
 /// <summary>
 /// Singleton system component for splitting long messages.
@@ -7,44 +7,41 @@ public class MessageFormatter : MonoSingleton<MessageFormatter> {
 	public int maxCharInLine = 15;
 	public int maxLines = 3;
 
-	string formatedMessage;
-
 	/// <summary>
 	/// Splits message into lines of length maxCharInLine adding '\n'.
 	/// </summary>
 	/// <returns>Formated message.</returns>
 	/// <param name="message">Message.</param>
-	public string FormatMessage(string message){
+	public string[] SplitMessageIntoLines(string message){
 		if (maxCharInLine == 0) {
-			Debug.LogError("MessageFormatter :: maxCharInLine is 0.");
-			return message;
+			Logger.LogMessage("MessageFormatter :: maxCharInLine is 0.", LogType.Error);
+			return null;
 		}
-		string newLine;
-		int pos;
-		formatedMessage = "";
+        List<string> messageLinesList = new List<string>();
 		while( message != ""){
-			message = message.Trim ();
+            string newLine;
+            int pos;
+            message = message.Trim ();
 			if (message.Length > maxCharInLine) {
 				newLine = message.Substring (0, maxCharInLine+1);
 				pos = newLine.LastIndexOf (" ");
 				if (pos == -1) {
-					formatedMessage += newLine.Substring(0,maxCharInLine) + "\n";
+					messageLinesList.Add(newLine.Substring(0,maxCharInLine));
 					message = message.Substring (maxCharInLine);
 				} else if(pos == maxCharInLine){
-					formatedMessage += newLine + "\n";
+                    messageLinesList.Add(newLine);
 					message = message.Substring (maxCharInLine+1);
 				}
 				else {
-					formatedMessage += newLine.Substring (0, pos) + "\n";
+                    messageLinesList.Add(newLine.Substring (0, pos));
 					message = message.Substring (pos + 1);
 				}
 			}
 			else{
-				formatedMessage += message;
+                messageLinesList.Add(message);
 				message = "";
 			}
 		}
-		return formatedMessage;
+		return messageLinesList.ToArray();
 	}
-		
 }

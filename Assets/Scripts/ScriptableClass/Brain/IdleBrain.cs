@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu (menuName = "ScriptableObject/Brains/IdleBrain")]
+//[CreateAssetMenu (menuName = "ScriptableObject/Brains/IdleBrain")]
 public class IdleBrain : Brain{
 	public SimpleBehaviourClass[] behaviours;
 

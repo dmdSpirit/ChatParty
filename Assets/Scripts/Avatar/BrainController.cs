@@ -8,8 +8,8 @@ public struct NextAttack{
 	public float nextTurnTimer;
 }
 
-[RequireComponent(typeof(AvatarController))]
-[RequireComponent(typeof(AvatarStats))]
+//[RequireComponent(typeof(AvatarController))]
+//[RequireComponent(typeof(AvatarStats))]
 public class BrainController : MonoBehaviour {
 	public IdleBrain idleBrain;
 	public float currentSpeed;
@@ -33,8 +33,8 @@ public class BrainController : MonoBehaviour {
 
 
 	public int Direction{
-		get{ return avatarController.Direction;}
-		set{ avatarController.Direction = value;}
+		get { return 1; }//avatarController.Direction;}
+		set { } //avatarController.Direction = value;}
 	}
 	AvatarController avatarController;
 	AvatarStats avatarStats;
@@ -83,7 +83,7 @@ public class BrainController : MonoBehaviour {
 
 	public void ChangeAnimation(string animationTrigger){
 		//Debug.Log (gameObject.name + " animation trigger set to " + animationTrigger);
-		avatarController.ChangeAnimation (animationTrigger);
+		//avatarController.ChangeAnimation (animationTrigger);
 	}
 
 	/*public void HitEnemy(string hitAnimationTrigger){

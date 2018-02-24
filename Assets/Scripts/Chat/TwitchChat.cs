@@ -57,7 +57,7 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
         while(usersJoinedBag.IsEmpty == false) {
             if (usersJoinedBag.TryTake(out userName)) {
                 if (logType == DebugLogType.Full)
-                    Logger.LogMessage("Twitch chat: " + userName + " has joined");
+                    Logger.LogMessage($"Twitch chat: {userName} has joined");
                 AvatarListController.Instance.AddViewer(userName);
             }
             else
@@ -66,7 +66,7 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
         while (usersLeftBag.IsEmpty == false) {
             if (usersLeftBag.TryTake(out userName)) {
                 if (logType == DebugLogType.Full)
-                    Logger.LogMessage("Twitch chat: " + userName + " has left");
+                    Logger.LogMessage($"Twitch chat: {userName} has left");
                 AvatarListController.Instance.RemoveViewer(userName);
             }
             else
@@ -77,7 +77,7 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
         while(messageQueue.IsEmpty == false) {
             if (messageQueue.TryDequeue(out messagePair)) {
                 if (logType == DebugLogType.Full)
-                    Logger.LogMessage("Message from " + messagePair.Item1 + ": " + messagePair.Item2);
+                    Logger.LogMessage($"Message from {messagePair.Item1}: {messagePair.Item2}");
                 AvatarListController.Instance.AddMessage(messagePair);
             }
             else
@@ -86,7 +86,7 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
         while (commandQueue.IsEmpty == false) {
             if (commandQueue.TryDequeue(out messagePair)) {
                 if (logType == DebugLogType.Full)
-                    Logger.LogMessage("Command from " + messagePair.Item1 + ": " + messagePair.Item2);
+                    Logger.LogMessage($"Command from {messagePair.Item1}: {messagePair.Item2}");
                 AvatarListController.Instance.AddCommand(messagePair);
             }
             else
@@ -131,13 +131,13 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
         string userName = e.WhisperMessage.DisplayName;
         string message = e.WhisperMessage.Message;
         if (logType == DebugLogType.Full)
-            Logger.LogMessage("Got a wisper from " + userName + ": " + message);
-        client.SendWhisper(e.WhisperMessage.Username, "Hey, " + userName + " no reason going stealth-mode," +
+            Logger.LogMessage($"Got a wisper from {userName}: {message}");
+        client.SendWhisper(e.WhisperMessage.Username, $"Hey, {userName} no reason going stealth-mode," +
             " I can't handle wispers yet.");
     }
 
     private void OnConnectionError(object sender, OnConnectionErrorArgs e) {
-        Logger.LogMessage("TwitchChat connection: " + e.Error.Message, LogType.Error);
+        Logger.LogMessage($"TwitchChat connection: {e.Error.Message}", LogType.Error);
     }
 
     private void OnUserLeft(object sender, OnUserLeftArgs e) {
@@ -159,7 +159,9 @@ public class TwitchChat : MonoSingleton<TwitchChat> {
         if (logType != DebugLogType.None)
             Logger.LogMessage("Twitch chat connected.");
         twitchAPI = new TwitchAPI(Credentials.apiClientId, Credentials.accessToken);
+#if !UNITY_EDITOR
         client.SendMessage("ChatParty successfully connected to the channel.");
+#endif
     }
 
     private string GetUserDisplayedName (string userName){

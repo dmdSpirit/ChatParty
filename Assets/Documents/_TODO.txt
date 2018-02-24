@@ -15,12 +15,12 @@
 
 -----------------------------------
 ::version 2::
++ Nicknames uppercase
 - Fighting
 - Chat commands (!attack)
 - Dont show ! and /me messages
 - LVLs
 - Turn inactive viewers into zombies. Let the zombopacalypse begin.
-- Nicknames uppercase
 - Follower/Subscriber status
 - Twitch emotes
 - Viewer left/joined animation
@@ -45,6 +45,7 @@ Further todo:
 - Spawning mobs
 - Boss
 - continue running with minimized window
+- loot
 
 Viewer ideas:
 - kasarch: с боссом можно сделать так, что-бы рыцари подбегали, били, и сваливали. А от удара босса отлетали

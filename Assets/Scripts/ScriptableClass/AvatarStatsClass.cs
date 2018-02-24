@@ -1,8 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-
+/// <summary>
+/// Scriptable object for storing Avatar stats.
+/// </summary>
 [CreateAssetMenu (menuName = "ScriptableObject/ViewerStats")]
 public class AvatarStatsClass : ScriptableObject {
 	// Movement.
@@ -16,6 +16,7 @@ public class AvatarStatsClass : ScriptableObject {
 	public int maxHP;
 	public float attackDistance;
 	public float attackCooldown;
+    public float maxCombatRunDistance;
 	public Vector2 damage;
 	public float armor;
 	public float critChance;

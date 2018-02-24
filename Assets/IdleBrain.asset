@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d491df7194bc4d2429ebf79817137faa, type: 3}
+  m_Name: IdleBrain
+  m_EditorClassIdentifier: 
+  actionList:
+  - {fileID: 11400000, guid: 86b4bbb934b621b4b972dd0a82ebd314, type: 2}
+  - {fileID: 11400000, guid: af50209a56748bf44a473d5933c1dc64, type: 2}
+  - {fileID: 11400000, guid: 876ea1210c7b40b479e0056823bb7b97, type: 2}
