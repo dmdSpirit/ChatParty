@@ -1,21 +1,18 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Linq;
 
-namespace dmdspirit.newScript {
-
+namespace dmdSpirit {
     public class FightController : MonoBehaviour {
         [SerializeField]
         BrainController[] fighters;
-        Dictionary<BrainController, float> turnTimers;
+        Dictionary<BrainController, float> turnTimersDictionary;
+        Dictionary<BrainController, float> initiativeDictionary;
         Dictionary<int, List<BrainController>> teamsDictionary;
 
         bool takeNewTurn = false;
-        Queue<BrainController> firstTurnQueue;
-
-        public event Action<FightController> OnFightEnded;
+        Queue<BrainController> turnQueue;
 
         public void StartFight(BrainController[] f) {
             fighters = f;
@@ -24,15 +21,17 @@ namespace dmdspirit.newScript {
                 Debug.Log("Fight could not be started, less than 2 teams.");
                 return;
             }
-            firstTurnQueue = new Queue<BrainController>();
-            turnTimers = new Dictionary<BrainController, float>();
+            turnQueue = new Queue<BrainController>();
+            turnTimersDictionary = new Dictionary<BrainController, float>();
+            initiativeDictionary = new Dictionary<BrainController, float>();
             foreach (var fighter in fighters) {
-                float initiative = fighter.StartFight(this);
-                turnTimers.Add(fighter, initiative);
+                float initiative = fighter.StartFight(this, GetFighterTeamID(fighter));
+                turnTimersDictionary.Add(fighter, initiative);
+                initiativeDictionary.Add(fighter, initiative);
             }
-            foreach (var brainInitPair in turnTimers.ToList().OrderByDescending(t => t.Value)) {
-                firstTurnQueue.Enqueue(brainInitPair.Key);
-                turnTimers[brainInitPair.Key] = 0;
+            foreach (var brainInitPair in turnTimersDictionary.ToList().OrderByDescending(t => t.Value)) {
+                turnQueue.Enqueue(brainInitPair.Key);
+                turnTimersDictionary[brainInitPair.Key] = 0;
             }
             takeNewTurn = true;
         }
@@ -46,22 +45,39 @@ namespace dmdspirit.newScript {
             takeNewTurn = false;
             BrainController nextFighter;
             // If it is still first turn.
-            if (firstTurnQueue.Count != 0) {
+            if (turnQueue.Count != 0) {
                 LogFirstTurnQueue();
-                nextFighter = firstTurnQueue.Dequeue();
+                nextFighter = turnQueue.Dequeue();
             }
             else {
                 LogTimeline();
-                nextFighter = turnTimers.ToList().OrderBy(t => t.Value).First().Key;
+                var timersList = turnTimersDictionary.ToList();
+                // If several fighters have same cooldown we store them in queue ordering by initiative.
+                float minTimer = timersList.Min(t => t.Value);
+                var nextFightersList = timersList.Where(t => t.Value == minTimer);
+                float nextFighterCooldown = turnTimersDictionary[nextFightersList.First().Key];
                 foreach (var fighter in fighters)
-                    turnTimers[fighter] -= turnTimers[nextFighter];
+                    turnTimersDictionary[fighter] -= nextFighterCooldown;
+                if (nextFightersList.Count() != 1) {
+                    turnQueue.Clear();
+                    Dictionary<BrainController, float> nextFightersDictionary = new Dictionary<BrainController, float>();
+                    foreach (var fighter in nextFightersList)
+                        nextFightersDictionary.Add(fighter.Key, initiativeDictionary[fighter.Key]);
+                    var nextFightersQueue = nextFightersDictionary.ToList().OrderBy(t => t.Value);
+                    foreach (var nF in nextFightersQueue)
+                        turnQueue.Enqueue(nF.Key);
+                    nextFighter = turnQueue.Dequeue();
+                }
+                else {
+                    nextFighter = nextFightersList.First().Key;
+                }
             }
             Debug.Log(nextFighter.gameObject.name + " now attacks");
             nextFighter.StartTurn();
         }
 
         public void EndTurn(BrainController lastFighter, float cooldown) {
-            turnTimers[lastFighter] = cooldown;
+            turnTimersDictionary[lastFighter] = cooldown;
             takeNewTurn = true;
         }
 
@@ -129,7 +145,7 @@ namespace dmdspirit.newScript {
 
         public void LogTimeline() {
             string timeline = "";
-            foreach (var t in turnTimers.ToList().OrderBy(t => t.Value)) {
+            foreach (var t in turnTimersDictionary.ToList().OrderBy(t => t.Value)) {
                 timeline += string.Format("{0}: {1}, ", t.Key.gameObject.name, t.Value);
             }
             Debug.Log(timeline);
@@ -137,7 +153,7 @@ namespace dmdspirit.newScript {
 
         public void LogFirstTurnQueue() {
             string timeline = "First turn fighters left: ";
-            foreach (var t in firstTurnQueue) {
+            foreach (var t in turnQueue) {
                 timeline += t.gameObject.name + ", ";
             }
             Debug.Log(timeline);
@@ -152,12 +168,5 @@ namespace dmdspirit.newScript {
                 Debug.Log("Team " + teamID + ": " + teamString);
             }
         }
-
-        //// ------------- old
-        public void OnTurnEnded(BrainController lastFighter) {
-            //turnTimers[lastFighter] = lastFighter.turnTimer;
-            takeNewTurn = true;
-        }
     }
-
 }

@@ -16,9 +16,15 @@
 -----------------------------------
 ::version 2::
 + Nicknames uppercase
++ Dont show ! messages 
 - Fighting
+	- Team indicator
+	- Hurt animation
+	- Damage dealt (UI + take damage)
+	- Death (weakened state / grave)
+	- Win (win animation)
 - Chat commands (!attack)
-- Dont show ! and /me messages
+- Dont show /me messages
 - LVLs
 - Turn inactive viewers into zombies. Let the zombopacalypse begin.
 - Follower/Subscriber status

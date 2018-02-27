@@ -8,13 +8,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d87026ddc2bc4ab429bbf61743fc6df3, type: 3}
+  m_Script: {fileID: 11500000, guid: 537bd6ec267cdf74aa4f60c7cdd546f1, type: 3}
   m_Name: FightBrain
   m_EditorClassIdentifier: 
-  moveToBehaviour: {fileID: 11400000, guid: 6c1d2e4e09e26f341a3d6656db6883d1, type: 2}
-  attacks:
-  - {fileID: 11400000, guid: 8522c38bd51f56c4db1a44ab6f9e9b8e, type: 2}
-  idleBehaviour: {fileID: 11400000, guid: df829a4ce7766364ab39f746b9d5a349, type: 2}
-  looseBehaviour: {fileID: 0}
-  winBehaviour: {fileID: 0}
-  hurtTrigger: Hurt
+  actionList:
+  - {fileID: 11400000, guid: 98d49e78fa9147a43887a9fceef1a7a5, type: 2}
+  - {fileID: 11400000, guid: 01a718fff53b9234f86185f56ce41e8f, type: 2}
+  ildeAnimationTrigger: Idle
+  runAction: {fileID: 11400000, guid: cce55792c6329fb4c8e48b4c4237dbb5, type: 2}

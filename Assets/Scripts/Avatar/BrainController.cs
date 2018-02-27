@@ -1,139 +1,65 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using UnityEngine;
 
-public struct NextAttack{
-	public string attackName;
-	public float nextTurnTimer;
-}
+namespace dmdSpirit {
+    [RequireComponent(typeof(AvatarController))]
+    public class BrainController : MonoBehaviour {
+        public AvatarStatsClass Stats => avatarController.avatarStats.stats;
+        public AnimationController animationController => avatarController.animationController;
 
-//[RequireComponent(typeof(AvatarController))]
-//[RequireComponent(typeof(AvatarStats))]
-public class BrainController : MonoBehaviour {
-	public IdleBrain idleBrain;
-	public float currentSpeed;
-	public float currentDistance;
+        [SerializeField]
+        IdleBrain idleBrain;
+        [SerializeField]
+        FightBrain fightBrain;
 
-	//public old_FightingBrain fightingBrain;
-	//public old_FightingController fightingController;
-	public FightBrain fightBrain;
-	public BrainController enemyBrainController;
-	public float attackCooldown;
-	NextAttack nextAttack;
-	public float initiative;
-	public float turnTimer;
-	public event Action<BrainController> OnTurnEnded;
-	public float damage;
-	public int teamID;
-	public bool turn = false;
+        BrainClass currentBrain;
+        AvatarController avatarController;
 
-	Brain currentBrain;
-	public BehaviourClass currentBehaviour;
+        private void Awake() {
+            avatarController = GetComponent<AvatarController>();
+        }
 
+        private void Start() {
+            ChangeBrain(idleBrain);
+        }
 
-	public int Direction{
-		get { return 1; }//avatarController.Direction;}
-		set { } //avatarController.Direction = value;}
-	}
-	AvatarController avatarController;
-	AvatarStats avatarStats;
+        private void Update() {
+            if (currentBrain != null)
+                currentBrain.UpdateBrain(this);
+            else
+                Logger.LogMessage($"{gameObject.name}::BrainController::Update -- currentBrain is null", LogType.Error);
+        }
 
-	void Awake(){
-		avatarController = GetComponent<AvatarController> ();
-		avatarStats = GetComponent<AvatarStats> ();
-	}
+        /// <summary>
+        /// Changes AvatarBrain to fightBrain and prepares Avatar for combat.
+        /// </summary>
+        /// <param name="fightController">FightController</param>
+        /// <returns>Initiative</returns>
+        public float StartFight(FightController fightController, int teamID) {
+            if (ChangeBrain(fightBrain))
+                return fightBrain.SetFightController(this, fightController, teamID);
+            return 0;
+        }
 
-	void Update(){
-		if (currentBrain.GetType() == typeof(IdleBrain) && currentBehaviour != null)
-			currentBrain.Act (this);
-		if(turn && currentBrain.GetType() == typeof(FightBrain)){
-			turn = false;
-			((FightBrain)currentBrain).StartTurn (this);
-		}
-	}
+        /// <summary>
+        /// Starts this Avatar's combat turn.
+        /// </summary>
+        public void StartTurn() {
+            if (currentBrain == fightBrain)
+                fightBrain.StartTurn(this);
+            else
+                Logger.LogMessage($"{gameObject.name}::BrainController -- StartTurn is called when Avatar is not fighting.");
+        }
 
-	public AvatarStatsClass GetAvatarStats(){
-		return avatarController.avatarStats.stats;
-	}
-
-	public void InitIdleBrain(){
-		currentBehaviour = idleBrain.InitBrain (this);
-		currentBrain = idleBrain;
-		InitBehaviour ();
-	}
-
-	/*public void InitFightingBrain(old_FightingController fController, BrainController enemyBrainController){
-		fightingController = fController;
-		currentBehaviour = fightingBrain.InitBrain (this);
-		currentBrain = fightingBrain;
-		this.enemyBrainController = enemyBrainController;
-		InitBehaviour ();
-	}*/
-		
-	public void ChangeBehaviour (BehaviourClass newBehaviour){
-		currentBehaviour = newBehaviour;
-		InitBehaviour ();
-	}
-
-	public void InitBehaviour(){
-		currentBehaviour.Init (this);
-		ChangeAnimation (currentBrain.GetAnimationTrigger(this));
-	}
-
-	public void ChangeAnimation(string animationTrigger){
-		//Debug.Log (gameObject.name + " animation trigger set to " + animationTrigger);
-		//avatarController.ChangeAnimation (animationTrigger);
-	}
-
-	/*public void HitEnemy(string hitAnimationTrigger){
-		Vector2 damageRange = GetAvatarStats ().damage;
-		bool stun = UnityEngine.Random.value <= GetAvatarStats ().critChance;
-		float critM = stun ? GetAvatarStats ().critMultiplayer : 1;
-		float damage = critM * UnityEngine.Random.Range(damageRange.x, damageRange.y);
-		enemyBrainController.TakeDamage ((int)damage, stun);
-		ChangeAnimation (hitAnimationTrigger);
-	}*/
-
-	public void TakeDamage(float damage){
-		ChangeAnimation (fightBrain.hurtTrigger);
-		attackCooldown = GetAvatarStats ().attackCooldown;
-		Debug.Log (gameObject.name + " lost " + damage + " HP.");
-
-	}
-
-	public void EndFight(bool win){
-		currentBrain = idleBrain;
-
-		InitBehaviour ();
-	}
-
-	public float GetInitiative(){
-		initiative = UnityEngine.Random.value;
-		return initiative;
-	}
-
-	public void TakeTurn(){
-		turn = true;
-		//TurnEnded ();
-	}
-
-	public void TurnEnded(){
-		// TODO: turnTimer mast already be calculated.
-		if (OnTurnEnded != null)
-			OnTurnEnded (this);
-	}
-
-	public void InitFightingBrain(){
-		currentBrain = fightBrain;
-		//currentBehaviour = fightBrain.idleBehaviour;
-		currentBehaviour = null;
-		//InitBehaviour();
-		// FIXME: Get animation trigger from brain.
-		ChangeAnimation("Idle");
-	}
-
-	public void DealDamage(){
-		enemyBrainController.TakeDamage (damage);
-	}
+        private bool ChangeBrain(BrainClass newBrain) {
+            if (newBrain != null) {
+                currentBrain = newBrain;
+                currentBrain.InitBrain(this);
+                return true;
+            }
+            else {
+                Logger.LogMessage($"{gameObject.name}::BrainController -- trying to change brain to null-object.", LogType.Error);
+                return false;
+            }
+        }
+    }
 }
