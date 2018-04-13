@@ -16,8 +16,10 @@ namespace dmdSpirit {
                 brainVariables = brainController.gameObject.AddComponent<IdleBrainVariables>();
             if (actionList.Length == 0)
                 Logger.LogMessage($"{name}::InitBrain -- actionList is empty.", LogType.Error);
-            else
+            else {
                 brainVariables.currentAction = GetRandomAction();
+                brainVariables.currentAction.InitAction(brainController);
+            }
 
         }
 

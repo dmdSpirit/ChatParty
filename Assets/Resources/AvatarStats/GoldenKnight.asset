@@ -22,5 +22,5 @@ MonoBehaviour:
   maxCombatRunDistance: 0.8
   damage: {x: 1, y: 2}
   armor: 0
-  critChance: 0.5
+  critChance: 0.15
   critMultiplayer: 3

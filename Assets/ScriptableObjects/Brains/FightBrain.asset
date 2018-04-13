@@ -16,3 +16,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 01a718fff53b9234f86185f56ce41e8f, type: 2}
   ildeAnimationTrigger: Idle
   runAction: {fileID: 11400000, guid: cce55792c6329fb4c8e48b4c4237dbb5, type: 2}
+  hurtAction: {fileID: 11400000, guid: 0eb856545c4fd9347ab602a3262aa8bd, type: 2}
+  deathAction: {fileID: 11400000, guid: 92334fbe39aa2af48bf59cb1d15c2513, type: 2}

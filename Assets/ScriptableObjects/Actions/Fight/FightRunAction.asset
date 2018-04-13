@@ -13,4 +13,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationTrigger: Run
   baseActionWeight: 1
+  eventFunctionNames:
+  - OnAnimationEnded
   baseActionCooldown: 1
+  ildeAnimationTrigger: Idle

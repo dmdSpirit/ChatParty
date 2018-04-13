@@ -13,4 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animationTrigger: Attack
   baseActionWeight: 3
+  eventFunctionNames:
+  - OnAnimationEnded
+  - OnDamageDealt
   baseActionCooldown: 3
+  baseDamageMultiplier: 2

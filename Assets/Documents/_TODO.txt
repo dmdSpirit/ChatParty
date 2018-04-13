@@ -17,27 +17,36 @@
 ::version 2::
 + Nicknames uppercase
 + Dont show ! messages 
-- Fighting
-	- Team indicator
-	- Hurt animation
-	- Damage dealt (UI + take damage)
-	- Death (weakened state / grave)
-	- Win (win animation)
-- Chat commands (!attack)
-- Dont show /me messages
-- LVLs
-- Turn inactive viewers into zombies. Let the zombopacalypse begin.
++ Chat commands (!StartFight)
+- Viewer left/joined event
+- Viewer followed/subscribed event
 - Follower/Subscriber status
-- Twitch emotes
+- Dont show /me messages
+- Fix "first attack freeze" bug
+- Fix "user disconnecting during fight" bug
+- Fighting
+	+ Team indicator
+	+ take damage
+	+ Hurt animation
+	+ Death 
+	- Damage dealt (UI)
+	- Smart weights logic
+	- Win (win animation)
+	- Weakened state / grave
+- Fight statistics (Winning team)
 - Viewer left/joined animation
 - Viewer followed/subscribed animation
+- Turn inactive viewers into zombies. Let the zombopacalypse begin.
+- If zombie tries to speak turn text into "remkvrekrvekvek"
 - Show number of messages left in queue (UI img on message box)
+- LVLs
+- Twitch emotes
 --
 - Resize depending on viewers count
-- Fight statistics
 
 - 5 more avatars
 
+- Rich text format. Implement?
 
 -----------------------------------
 Further todo:
@@ -52,10 +61,9 @@ Further todo:
 - Boss
 - continue running with minimized window
 - loot
+- If attacking from behind => bonus damage?
+- Status effects
 
 Viewer ideas:
 - kasarch: с боссом можно сделать так, что-бы рыцари подбегали, били, и сваливали. А от удара босса отлетали
 - tautometer: Maybe users can vote to decide to travel to another location to find new kind of mobs.
-
--------------------------------------
-- EventBus

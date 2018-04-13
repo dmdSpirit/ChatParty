@@ -1,18 +1,27 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace dmdSpirit {
     [RequireComponent(typeof(AvatarController))]
     public class BrainController : MonoBehaviour {
+        // HACK: Needed to avatarStats. Remove after fix.
+        public AvatarController avatarController;
+        // FIXME: I need reference to avatarController.avatarStats.
         public AvatarStatsClass Stats => avatarController.avatarStats.stats;
         public AnimationController animationController => avatarController.animationController;
+        public AnimationEventHandler animationEventHandler => avatarController.animationEventHandler;
+        public bool InCombat => currentBrain == fightBrain;
+
+        //[HideInInspector]
+        public BrainClass currentBrain;
 
         [SerializeField]
         IdleBrain idleBrain;
         [SerializeField]
         FightBrain fightBrain;
 
-        BrainClass currentBrain;
-        AvatarController avatarController;
+        IdleBrain oldIdleBrain;
+        FightBrain oldFightBrain;
 
         private void Awake() {
             avatarController = GetComponent<AvatarController>();
@@ -20,6 +29,8 @@ namespace dmdSpirit {
 
         private void Start() {
             ChangeBrain(idleBrain);
+            oldIdleBrain = idleBrain;
+            oldFightBrain = fightBrain;
         }
 
         private void Update() {
@@ -27,6 +38,20 @@ namespace dmdSpirit {
                 currentBrain.UpdateBrain(this);
             else
                 Logger.LogMessage($"{gameObject.name}::BrainController::Update -- currentBrain is null", LogType.Error);
+        }
+
+        internal void ChangeBrains(TurnIntoClass turnIntoTarget) {
+            // TODO: Check current brain and switch it to new. (Current brain hotSwitch)
+            if (turnIntoTarget.idleBrain != null)
+                idleBrain = turnIntoTarget.idleBrain;
+            if (turnIntoTarget.fightBrain != null)
+                fightBrain = turnIntoTarget.fightBrain;
+        }
+
+        internal void RestoreBrains() {
+            // TODO: Check current brain and switch it to new. (Current brain hotSwitch)
+            idleBrain = oldIdleBrain;
+            fightBrain = oldFightBrain;
         }
 
         /// <summary>
@@ -38,6 +63,11 @@ namespace dmdSpirit {
             if (ChangeBrain(fightBrain))
                 return fightBrain.SetFightController(this, fightController, teamID);
             return 0;
+        }
+
+        public void EndFight() {
+            fightBrain.EndFight(this);
+            ChangeBrain(idleBrain);
         }
 
         /// <summary>

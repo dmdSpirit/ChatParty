@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Linq;
+//using UnityEditor.Animations;
 
 namespace dmdSpirit {
     /// <summary>
@@ -6,8 +8,6 @@ namespace dmdSpirit {
     /// </summary>
     [RequireComponent(typeof(AvatarController))]
     public class AnimationController : MonoBehaviour {
-        [SerializeField]
-        DebugLogType logType = DebugLogType.Short;
 
         /// <summary>
         /// Direction of Sprite.
@@ -24,11 +24,14 @@ namespace dmdSpirit {
             set { SpriteGO.GetComponent<SpriteRenderer>().sortingOrder = value; spriteSortOrder = value; }
         }
 
+
         AvatarController avatarController;
         GameObject SpriteGO { get { return avatarController.spriteGO; } }
         Animator SpriteAnimator { get { return avatarController.spriteAnimator; } }
+
         float direction;
         int spriteSortOrder;
+
 
         private void Awake() {
             avatarController = GetComponent<AvatarController>();
@@ -41,7 +44,7 @@ namespace dmdSpirit {
         public void TriggerAnimation(string animationTrigger) {
             // All animations must have hasExitTime = false.
             //if (logType == DebugLogType.Full)
-            //    Logger.LogMessage($"{Time.time} :: {gameObject.name}::AnimationController -- Animation {animationTrigger} is triggered.");
+            //Logger.LogMessage($"{Time.time} :: {gameObject.name}::AnimationController -- Animation {animationTrigger} is triggered.");
             SpriteAnimator.SetTrigger(animationTrigger);
         }
 
@@ -56,6 +59,16 @@ namespace dmdSpirit {
             var normalizedTime = SpriteAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime;
             //Logger.LogMessage($"{Time.time} :: {gameObject.name}::AnimationController -- currentClipName = {currentClipName}, normalizedTime = {normalizedTime}");
             return animationTrigger != currentClipName ? false : normalizedTime >= 1;
+        }
+
+        public AnimationEvent[] GetClipAnimationEvents(string animationTrigger) {
+            var animationClips = SpriteAnimator.runtimeAnimatorController.animationClips;
+            AnimationClip clip = animationClips.Where(t => t.name == animationTrigger).FirstOrDefault();
+            if (clip == null) {
+                Logger.LogMessage($"{gameObject.name}::AnimationController -- no clip with name {animationTrigger} found.", LogType.Error);
+                return null;
+            }
+            return clip.events;
         }
     }
 }

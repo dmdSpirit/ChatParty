@@ -10,6 +10,10 @@ namespace dmdSpirit {
         string ildeAnimationTrigger;
         [SerializeField]
         AvatarCombatAction runAction;
+        [SerializeField]
+        AvatarCombatAction hurtAction;
+        [SerializeField]
+        AvatarCombatAction deathAction;
 
         /// <summary>
         /// Initializing function for brain.
@@ -34,6 +38,9 @@ namespace dmdSpirit {
             // We will call first GetNextAction in SetFightController.
             // ---- brainVariables.nextAction = GetNextAction(brainController);
             brainVariables.turnEnded = false;
+            brainController.avatarController.avatarStats.ShowHP = true;
+            // FIXME: For first combat build. Add hp regeneration later.
+            brainController.avatarController.avatarStats.ResetHP();
         }
 
         /// <summary>
@@ -51,6 +58,12 @@ namespace dmdSpirit {
                 else if (brainVariables.currentAction != null)
                     brainVariables.turnEnded = brainVariables.currentAction.Act(brainController);
             }
+            else if (brainVariables.currentAction != null) {
+                if (brainVariables.currentAction.Act(brainController)) {
+                    brainVariables.currentAction = null;
+                    //brainController.animationController.TriggerAnimation(ildeAnimationTrigger);
+                }
+            }
         }
 
         /// <summary>
@@ -64,6 +77,7 @@ namespace dmdSpirit {
             brainVariables.fightController = fightController;
             brainVariables.nextAction = GetNextAction(brainController);
             brainVariables.TeamID = teamID;
+            brainController.avatarController.avatarStats.OnDeath += fightController.OnDeath;
             return brainVariables.initiative;
         }
 
@@ -76,8 +90,14 @@ namespace dmdSpirit {
             var brainVariables = brainController.GetComponent<FightBrainVariables>();
             brainVariables.turn = true;
             brainVariables.turnEnded = false;
+            // Check the enemy. It can be dead.
+            if (brainVariables.currentEnemy.avatarController.avatarStats.IsAlive == false) {
+                brainVariables.currentEnemy = brainVariables.fightController.GetClosestEnemy(brainController);
+                Logger.LogMessage($"{brainController.gameObject.name}::StartTurn " +
+                    $"-- enemy is dead. Getting new enemy : {brainVariables.currentEnemy}");
+            }
             var distanceToEnemy = Mathf.Abs(brainController.transform.position.x - brainVariables.currentEnemy.transform.position.x);
-            // Change this check if any other moving action will be implemented.
+            // FIXME: Change this check if any other moving action will be implemented.
             if (distanceToEnemy > brainController.Stats.attackDistance && brainVariables.nextAction != runAction)
                 brainVariables.nextAction = GetNextAction(brainController);
             if (brainVariables.nextAction == null) {
@@ -97,6 +117,7 @@ namespace dmdSpirit {
         private AvatarCombatAction GetNextAction(BrainController brainController) {
             var brainVariables = brainController.GetComponent<FightBrainVariables>();
             AvatarCombatAction nextAction;
+            // FIXME: Check if Avatar need to attack other closest enemy.
             if (brainVariables.currentEnemy == null)
                 brainVariables.currentEnemy = brainVariables.fightController.GetClosestEnemy(brainController);
             // FIXME: Rewrite this code using new clever action weight property.
@@ -111,10 +132,35 @@ namespace dmdSpirit {
         private void EndTurn(BrainController brainController) {
             var brainVariables = brainController.GetComponent<FightBrainVariables>();
             brainVariables.nextAction = GetNextAction(brainController);
+            brainVariables.currentAction = null;
             brainVariables.turn = false;
-            brainController.animationController.TriggerAnimation(ildeAnimationTrigger);
+            //brainController.animationController.TriggerAnimation(ildeAnimationTrigger);
             brainController.animationController.SpriteSortOrder = brainVariables.spriteSortOrder;
             brainVariables.fightController.EndTurn(lastFighter: brainController, cooldown: brainVariables.ActionCooldown);
+        }
+
+        public void TakeDamage(BrainController brainController, float damage, bool crit) {
+            var brainVariables = brainController.GetComponent<FightBrainVariables>();
+            if (crit)
+                Logger.LogMessage($"{brainController.gameObject.name} has taken {damage} damage! Its a crit!");
+            else
+                Logger.LogMessage($"{brainController.gameObject.name} has taken {damage} damage.");
+            if (brainController.avatarController.avatarStats.TakeDamage(damage) == 0) {
+                brainVariables.TeamID = 0;
+                brainVariables.currentAction = deathAction;
+            }
+            else {
+                brainVariables.currentAction = hurtAction;
+            }
+            brainVariables.currentAction.InitAction(brainController);
+
+        }
+        
+        public void EndFight(BrainController brainController) {
+            var brainVariables = brainController.GetComponent<FightBrainVariables>();
+           // brainController.animationController.TriggerAnimation(ildeAnimationTrigger);
+            brainController.avatarController.avatarStats.ShowHP = false;
+            brainVariables.TeamID = 0;
         }
     }
 

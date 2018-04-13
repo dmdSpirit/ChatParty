@@ -158,5 +158,12 @@ namespace dmdSpirit {
                     break;
             }
         }
+
+        public List<BrainController> GetAllFighters() {
+            List<BrainController> fightersList = new List<BrainController>();
+            foreach (var viewerPair in viewerDictionary)
+                fightersList.Add(viewerPair.Value.brainController);
+            return fightersList;
+        }
     }
 }

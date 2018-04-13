@@ -415,6 +415,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   leftBorder: {fileID: 2058327504}
   rightBorder: {fileID: 519624213}
+--- !u!1 &991304608
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 991304610}
+  - component: {fileID: 991304609}
+  m_Layer: 0
+  m_Name: ClipsEditor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &991304609
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 991304608}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ba2ec45feb41a9044a0cd6fca5164eed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animationClipsArray: []
+  functionName: OnAnimationEnded
+--- !u!4 &991304610
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 991304608}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1314688710}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1089250691
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,6 +530,48 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
+--- !u!1 &1218045901
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 1218045903}
+  - component: {fileID: 1218045902}
+  m_Layer: 0
+  m_Name: CommandController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1218045902
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1218045901}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e384443b64c5e94dae0a1f2a5fe7427, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  commandsArray:
+  - {fileID: 11400000, guid: 56a1b003b39385d45bda85279eed06f8, type: 2}
+--- !u!4 &1218045903
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1218045901}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1314688707
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,7 +630,8 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 991304610}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -577,7 +662,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1095aa357cc3e95489bf83443515dc35, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isFighting: 0
   fighters: []
+  massFightCommand: {fileID: 11400000, guid: 56a1b003b39385d45bda85279eed06f8, type: 2}
 --- !u!4 &1563666040
 Transform:
   m_ObjectHideFlags: 0
@@ -622,7 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed7b9753415f8946af189072d44814a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatEnabled: 0
+  chatEnabled: 1
   logType: 2
   commandIdentifier: 33
 --- !u!4 &1610729091
@@ -661,7 +748,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e774a550313255247a32c74dd72838f2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  addTestViewers: 1
+  addTestViewers: 0
   logType: 2
   avatarPrefab: {fileID: 1153230287917238, guid: 2886ccd81592afb4ba53e1663e1121a5,
     type: 2}

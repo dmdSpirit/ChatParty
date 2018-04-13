@@ -6,6 +6,7 @@ namespace dmdSpirit {
     /// </summary>
     [CreateAssetMenu(menuName = "ScriptableObject/Actions/Fight/Run")]
     public class FightRunAction : AvatarCombatAction {
+        public string ildeAnimationTrigger;
         /// <summary>
         /// Initializing function for action.
         /// </summary>
@@ -21,7 +22,6 @@ namespace dmdSpirit {
                 brainVariables.distanceToRun =
                     Mathf.Min(Mathf.Abs(distanceToEnemy) - brainController.Stats.attackDistance, brainController.Stats.maxCombatRunDistance);
             brainController.animationController.Direction = brainVariables.runDirection;
-            //Logger.LogMessage($"{brainController.gameObject.name}::FightRunAction::InitAction -- distanceToRun = {brainVariables.distanceToRun};");
         }
 
         /// <summary>
@@ -34,9 +34,11 @@ namespace dmdSpirit {
             float runDistance = Mathf.Min(brainVariables.runSpeed * Time.deltaTime, brainVariables.distanceToRun);
             brainVariables.distanceToRun -= runDistance;
             brainController.transform.Translate(runDistance * brainVariables.runDirection, 0, 0);
-            //Logger.LogMessage($"{brainController.gameObject.name}::FightRunAction::Act -- runDistance = {runDistance};" +
-            //    $" new distanceToRun = {brainVariables.distanceToRun}");
-            return brainVariables.distanceToRun <= 0;
+            bool actionEnded = brainVariables.distanceToRun <= 0;
+            if(actionEnded)
+                brainController.animationController.TriggerAnimation(ildeAnimationTrigger);
+            // TODO: Decide what to do with small side steps.
+            return actionEnded;
         }
     }
 
